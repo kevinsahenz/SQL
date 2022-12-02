@@ -1,0 +1,52 @@
+# In this SQL code, I am querying a database that is holding Netflix data to answer questions about the data. SQL dialect in this project is PostgreSQL
+
+# 1. Query to find total number of movie titles in the database
+SELECT COUNT(*)
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+WHERE type='Movie';
+
+# 2. Query to find most recent batch of tv shows and/or movies added to database
+
+SELECT max(date(date_added))
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info";
+
+
+# 3. Query to list all movies and tv shows in alphabetical order
+
+SELECT title 
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+ORDER BY title ASC;
+
+# 4. Query to locate director for the movie Bright Star
+
+SELECT director, title
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info" titles
+LEFT JOIN "CharlotteChaze/BreakIntoTech"."netflix_people" people
+ON titles.show_id=people.show_id
+WHERE titles.title = 'Bright Star';
+
+# 5. Query to locate oldest movie in the database, and the year it was released
+
+SELECT title, release_year
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info" 
+ORDER BY release_year ASC; 
+
+SELECT release_year, title
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info" 
+WHERE type='Movie'
+ORDER BY release_year ASC
+LIMIT 5;
+
+# Upong completing previous querey, when the limit was > 1, we can see there were two movies released in 1942
+
+# Query below uses a subquery to find all oldest movies withithout a limit, or the assumption there were only 2 that year
+
+SELECT title, release_year
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info" 
+WHERE type= 'Movie'
+AND release_year <=
+(SELECT MIN(release_year)
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info" 
+WHERE type = 'Movie');
+
+
